@@ -1,0 +1,122 @@
+local Fluent = loadstring(game:HttpGet("https://github.com/dawid-scripts/Fluent/releases/latest/download/main.lua"))()
+local SaveManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/SaveManager.lua"))()
+local InterfaceManager = loadstring(game:HttpGet("https://raw.githubusercontent.com/dawid-scripts/Fluent/master/Addons/InterfaceManager.lua"))()
+
+local Window = Fluent:CreateWindow({
+    Title = "Fluent " .. Fluent.Version,
+    SubTitle = "by dawid",
+    TabWidth = 160,
+    Size = UDim2.fromOffset(580, 460),
+    Acrylic = false,
+    Theme = "Dark",
+    MinimizeKey = Enum.KeyCode.LeftControl
+})
+
+local Tabs = {
+    Main = Window:AddTab({ Title = "Main", Icon = "info" }),
+    Stars = Window:AddTab({ Title = "Stars", Icon = "star" }),
+    Settings = Window:AddTab({ Title = "Settings", Icon = "settings" })
+}
+
+local Options = Fluent.Options
+
+----------------------------------------------------
+-- AUTO CLICK
+----------------------------------------------------
+
+local ToggleAutoClick = Tabs.Main:AddToggle("AutoClick", {
+    Title = "Auto Click",
+    Default = false
+})
+
+ToggleAutoClick:OnChanged(function()
+    while ToggleAutoClick.Value do
+        task.wait(0.01)
+
+        game:GetService("ReplicatedStorage").Bridge:FireServer(
+            "Attack",
+            "Click",
+            { Type = "Enemies_World" }
+        )
+    end
+end)
+
+local ToggleAutoFamily = Tabs.Main:AddToggle("Spin Family Passives", {
+    Title = "Auto Spin Family Passives",
+    Default = false
+})
+
+ToggleAutoFamily:OnChanged(function()
+    while ToggleAutoFamily.Value do
+        task.wait(0.0001)
+
+local ohString1 = "Family"
+local ohString2 = "Reroll"
+
+game:GetService("ReplicatedStorage").Bridge:FireServer(ohString1, ohString2)
+    end
+end)
+
+----------------------------------------------------
+-- STARS
+----------------------------------------------------
+
+local StarDropdown = Tabs.Stars:AddDropdown("StarSelect", {
+    Title = "Select Star",
+    Values = { "Leaf Village", "Hunter Town", "Tokyo Warzone" },
+    Multi = false,
+    Default = "Leaf Village"
+})
+
+local SpinType = Tabs.Stars:AddDropdown("SpinType", {
+    Title = "Spin Type",
+    Values = { "Spin", "Multi" },
+    Multi = false,
+    Default = "Spin"
+})
+
+local ToggleSummon = Tabs.Stars:AddToggle("OpenToggle", {
+    Title = "Auto Open Star",
+    Default = false
+})
+
+ToggleSummon:OnChanged(function()
+    while ToggleSummon.Value do
+        task.wait(0.0005)
+
+        local star = StarDropdown.Value
+        local spin = SpinType.Value
+
+        if star and spin then
+            game:GetService("ReplicatedStorage").Bridge:FireServer(
+                "Stars",
+                spin,      -- "Spin" ou "Multi"
+                star,      -- Leaf Village, etc
+                "Normal"
+            )
+        end
+    end
+end)
+
+----------------------------------------------------
+-- SAVE & INTERFACE MANAGER
+----------------------------------------------------
+
+SaveManager:SetLibrary(Fluent)
+InterfaceManager:SetLibrary(Fluent)
+
+SaveManager:IgnoreThemeSettings()
+SaveManager:SetIgnoreIndexes({})
+
+InterfaceManager:SetFolder("FluentScript")
+SaveManager:SetFolder("FluentScript/saves")
+
+InterfaceManager:BuildInterfaceSection(Tabs.Settings)
+SaveManager:BuildConfigSection(Tabs.Settings)
+
+Window:SelectTab(1)
+Fluent:Notify({
+    Title = "Fluent",
+    Content = "Script Loaded Successfully",
+    Duration = 5
+})
