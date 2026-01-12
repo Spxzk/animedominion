@@ -31,7 +31,7 @@ local ToggleAutoClick = Tabs.Main:AddToggle("AutoClick", {
 
 ToggleAutoClick:OnChanged(function()
     while ToggleAutoClick.Value do
-        task.wait(0.01)
+        task.wait(0.0001)
 
         game:GetService("ReplicatedStorage").Bridge:FireServer(
             "Attack",
@@ -40,6 +40,10 @@ ToggleAutoClick:OnChanged(function()
         )
     end
 end)
+
+----------------------------------------------------
+-- FAMILY
+----------------------------------------------------
 
 local ToggleAutoFamily = Tabs.Main:AddToggle("Spin Family Passives", {
     Title = "Auto Spin Family Passives",
@@ -54,6 +58,68 @@ local ohString1 = "Family"
 local ohString2 = "Reroll"
 
 game:GetService("ReplicatedStorage").Bridge:FireServer(ohString1, ohString2)
+    end
+end)
+
+----------------------------------------------------
+-- PASSIVES
+----------------------------------------------------
+
+local ToggleAutoPassives = Tabs.Main:AddToggle("Spin Passives", {
+    Title = "Auto Spin Passives",
+    Default = false
+})
+
+ToggleAutoPassives:OnChanged(function()
+    while ToggleAutoPassives.Value do
+        task.wait(0.0001)
+
+local args = {
+	"Passives",
+	"Reroll"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Bridge"):FireServer(unpack(args))
+    end
+end)
+
+----------------------------------------------------
+-- NEN
+----------------------------------------------------
+
+local ToggleAutoNen = Tabs.Main:AddToggle("Spin Nen", {
+    Title = "Auto Spin Nen",
+    Default = false
+})
+
+ToggleAutoNen:OnChanged(function()
+    while ToggleAutoNen.Value do
+        task.wait(0.0001)
+
+local args = {
+	"Nen",
+	"Reroll"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Bridge"):FireServer(unpack(args))
+    end
+end)
+
+----------------------------------------------------
+-- ASCENSION
+----------------------------------------------------
+local ToggleAutoAscension = Tabs.Main:AddToggle("Auto Ascension", {
+    Title = "Auto Ascension",
+    Default = false
+})
+
+ToggleAutoAscension:OnChanged(function()
+    while ToggleAutoAscension.Value do
+         task.wait(10)
+
+local args = {
+	"Ascension",
+	"Evolve"
+}
+game:GetService("ReplicatedStorage"):WaitForChild("Bridge"):FireServer(unpack(args))
     end
 end)
 
